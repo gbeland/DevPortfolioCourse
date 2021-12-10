@@ -3,29 +3,31 @@ using Shared.Models;
 
 namespace Server.Data
 {
-    public class AppDBContext :DbContext
+    public class AppDBContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
 
-        public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) {}
+        public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
 
-        protected override void OnModelCreating (ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating (modelBuilder);
-            Category[] catergoriesToSeed = new Category[3];
+            // Call the base version of this method as well, else we get an error later on.
+            base.OnModelCreating(modelBuilder);
 
-            for (int i = 0; i < catergoriesToSeed.Length; i++)
+            Category[] categoriesToSeed = new Category[3];
+
+            for (int i = 1; i < 4; i++)
             {
-                Category category = new Category { 
-                    CategoryId = i, 
-                    Description = "DEs" + i.ToString(), 
-                    Name = $"Catergory[i]", 
-                    ThumbnailImagePath = "uploads/placeholder.jpg" };
-
-                catergoriesToSeed[i] = category;
+                categoriesToSeed[i - 1] = new Category
+                {
+                    CategoryId = i,
+                    ThumbnailImagePath = "uploads/placeholder.jpg",
+                    Name = $"Category {i}",
+                    Description = $"A description of category {i}"
+                };
             }
 
-            modelBuilder.Entity<Category>().HasData(catergoriesToSeed);
+            modelBuilder.Entity<Category>().HasData(categoriesToSeed);
         }
     }
 }
